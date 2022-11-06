@@ -15,12 +15,17 @@ function App() {
 
   function handleToggle(id: Item["id"]) {
     // Should implement
+    const newArr = items.map(item => item.id !== id ? item : {...item, completed: !item.completed})
+    setItems(newArr)
   }
 
   function handleAdd(event: React.ChangeEvent<Form>) {
     event.preventDefault();
 
-    setItems((items) =>
+
+    if(event.target.text.value.trim() === "") return;
+
+    setItems(
       items.concat({
         id: +new Date(),
         completed: false,
@@ -36,10 +41,13 @@ function App() {
   }
 
   useEffect(() => {
-    api
+    setTimeout(() => {
+
+      api
       .list()
       .then(setItems)
       .finally(() => toggleLoading(false));
+    }, 1000)
   }, []);
 
   if (isLoading) return "Loading...";
